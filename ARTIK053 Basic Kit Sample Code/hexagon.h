@@ -4,8 +4,8 @@
 *
 * Filename: hexagon.h
 * Author: sj.yang
-* Release date: 2018/07/06
-* Version: 1.0
+* Release date: 2018/09/18
+* Version: 1.2
 *
 ****************************************************************************/
 
@@ -25,6 +25,7 @@ int hexagon_ir_main(int argc, FAR char *argv[]);
 int hexagon_temp_main(int argc, FAR char *argv[]);
 int hexagon_buzzer_main(int argc, FAR char *argv[]);
 int hexagon_pwmled_main(int argc, FAR char *argv[]);
+int hexagon_servo_main(int argc, FAR char *argv[]);
 
 int hexagon_ledsw_main(int argc, FAR char *argv[]);
 int hexagon_toggle_main(int argc, FAR char *argv[]);
