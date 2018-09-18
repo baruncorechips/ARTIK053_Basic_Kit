@@ -4,8 +4,8 @@
 *
 * Filename: hexagon.c
 * Author: sj.yang
-* Release date: 2018/08/20
-* Version: 1.1
+* Release date: 2018/09/18
+* Version: 1.2
 *
 ****************************************************************************/
 
@@ -13,52 +13,15 @@
 #include <stdlib.h>
 #include "A053BasicKit.h"
 
-// Hexagon GPIO Pin number
-#define PIN_D2 46
-#define PIN_D4 47
-#define PIN_D7 48
-#define PIN_D8 50
-
-// Hexagon ADC Pin number
-#define A0 0
-#define A1 1
-#define A2 2
-#define A3 3
-
-// Hexagon PWM Pin number
-#define PWM0 0
-#define PWM1 1
-#define PWM2 2
-#define PWM4 4
-
-// octave_chord period[us] // frequency[hz]
-#define O5_DO 1911 // 523.251[hz]
-#define O5_RE 1703 // 587.330[hz]
-#define O5_MI 1517 // 659.254[hz]
-#define O5_FA 1432 // 698.456[hz]
-#define O5_SO 1276 // 783.990[hz]
-#define O5_LA 1136 // 880.000[hz]
-#define O5_TI 1012 // 987.766[hz]
-
-#define O6_DO 956 // 1046.502[hz]
-#define O6_RE 851 // 1174.659[hz]
-#define O6_MI 758 // 1318.510[hz]
-#define O6_FA 716 // 1396.913[hz]
-#define O6_SO 638 // 1567.982[hz]
-#define O6_LA 568 // 1760.000[hz]
-#define O6_TI 506 // 1975.533[hz]
-
-
-//static void show_help_usage_hexagon(FAR char *argv[])
-//{
-//	printf("|---------------------------------------------------------|\n");
-//	printf("| %s basic : Sample programs of ARTIK053 Basic Kit   |\n", argv[0]);
-//	printf("| %s app : Application programs of ARTIK053 Basic Kit|\n", argv[0]);
-//	printf("|---------------------------------------------------------|\n");
-//}
-
-//static void show_help_basic_hexagon(FAR char *argv[])
 static void show_help_usage_hexagon(FAR char *argv[])
+{
+	printf("|---------------------------------------------------------|\n");
+	printf("| %s basic : Sample programs of ARTIK053 Basic Kit   |\n", argv[0]);
+	printf("| %s app : Application programs of ARTIK053 Basic Kit|\n", argv[0]);
+	printf("|---------------------------------------------------------|\n");
+}
+
+static void show_help_basic_hexagon(FAR char *argv[])
 {
 	printf("|--------------------------------------------|\n");
 	printf("| *** ARTIK053 BASIC KIT SAPMLE PROGRAMS *** |\n");
@@ -69,12 +32,30 @@ static void show_help_usage_hexagon(FAR char *argv[])
 	printf("| %s temp    |  adc[#]  | [#]TURNS |    |\n", argv[0]);
 	printf("| %s buzzer  |  pwm[#]  | [#]TURNS |    |\n", argv[0]);
 	printf("| %s pwmled  |  pwm[#]  | [#]TURNS |    |\n", argv[0]);
+	printf("| %s servo   |  pwm[#]  | [#]TURNS |    |\n", argv[0]);
 	printf("|--------------------------------------------|\n");
 	printf("| GPIO[0] (D2, D4),     GPIO[1](D7, D8)      |\n");
 	printf("|  ADC[0] (A0, A1),      ADC[1](A2, A3)      |\n");
 	printf("|  PWM[0] (PWM0, PWM1),  PWM[1](PWM2, PWM4)  |\n");
 	printf("|--------------------------------------------|\n");
 }
+
+static void show_help_app_hexagon(FAR char *argv[])
+{
+	printf("|-------------------------------------------|\n");
+	printf("| ***** ARTIK053 APPLICATION PROGRAMS ***** |\n");
+	printf("| %s ledsw   |(SW:GPIO 0, LED:GPIO 1)  |\n", argv[0]);
+	printf("| %s toggle  |(SW:GPIO 0, LED:GPIO 1)  |\n", argv[0]);
+	printf("| %s dimming |(SW:GPIO 0, LED:PWM 0 )  |\n", argv[0]);
+	printf("| %s autotemp|(TEMP:ADC0, LED:GPIO 0)  |\n", argv[0]);
+	printf("|-------------------------------------------|\n");
+	// GPIO - GPIO : ledsw, toggle
+	// GPIO - PWM : dimming
+	// GPIO - ADC
+	// ADC - PWM
+	// GPIO - ADC - PWM
+}
+
 
 int hexagon_main(int argc, FAR char *argv[])
 {
@@ -85,13 +66,15 @@ int hexagon_main(int argc, FAR char *argv[])
 	else if ( (argc==4) && (strcmp(argv[1],"temp")==0) ) {hexagon_temp_main(argc,argv);}
 	else if ( (argc==4) && (strcmp(argv[1],"buzzer")==0) ) {hexagon_buzzer_main(argc,argv);}
 	else if ( (argc==4) && (strcmp(argv[1],"pwmled")==0) ) {hexagon_pwmled_main(argc,argv);}
+	else if ( (argc==4) && (strcmp(argv[1],"servo")==0) ) {hexagon_servo_main(argc,argv);}
 
 	else if ( (argc==2) && (strcmp(argv[1],"ledsw")==0) ) {hexagon_ledsw_main(argc,argv);}
 	else if ( (argc==2) && (strcmp(argv[1],"toggle")==0) ) {hexagon_toggle_main(argc,argv);}
 	else if ( (argc==2) && (strcmp(argv[1],"dimming")==0) ) {hexagon_dimming_main(argc,argv);}
 	else if ( (argc==2) && (strcmp(argv[1],"autotemp")==0) ) {hexagon_autotemp_main(argc,argv);}
 
-	else if ( (argc==2) && (strcmp(argv[1],"help")==0) ) {show_help_usage_hexagon(argv);}
+	else if ( (argc==2) && (strcmp(argv[1],"basic")==0) ) {show_help_basic_hexagon(argv);}
+	else if ( (argc==2) && (strcmp(argv[1],"app")==0) ) {show_help_app_hexagon(argv);}
 
 	else show_help_usage_hexagon(argv);
 
@@ -122,7 +105,7 @@ int hexagon_led_main(int argc, FAR char *argv[])
 	}
 	else
 	{
-		show_help_usage_hexagon(argv);
+		show_help_basic_hexagon(argv);
 	}
 
 
@@ -173,7 +156,7 @@ int hexagon_switch_main(int argc, FAR char *argv[])
 	}
 	else
 	{
-		show_help_usage_hexagon(argv);
+		show_help_basic_hexagon(argv);
 	}
 
 	printf("*********** HEXAGON SWITCH BOARD TEST START ***********\n");
@@ -217,7 +200,7 @@ int hexagon_light_main(int argc, FAR char *argv[])
 	}
 	else
 	{
-		show_help_usage_hexagon(argv);
+		show_help_basic_hexagon(argv);
 	}
 
 	printf("*********** HEXAGON LIGHT BOARD TEST START ***********\n");
@@ -255,7 +238,7 @@ int hexagon_ir_main(int argc, FAR char *argv[])
 	}
 	else
 	{
-		show_help_usage_hexagon(argv);
+		show_help_basic_hexagon(argv);
 	}
 
 	printf("*********** HEXAGON IR SENSOR BOARD TEST START ***********\n");
@@ -294,7 +277,7 @@ int hexagon_temp_main(int argc, FAR char *argv[])
 	}
 	else
 	{
-		show_help_usage_hexagon(argv);
+		show_help_basic_hexagon(argv);
 	}
 
 	printf("*********** HEXAGON TEMPERATURE SENSOR BOARD TEST START ***********\n");
@@ -334,7 +317,7 @@ int hexagon_buzzer_main(int argc, FAR char *argv[])
 	}
 	else
 	{
-		show_help_usage_hexagon(argv);
+		show_help_basic_hexagon(argv);
 	}
 
 	printf("*********** HEXAGON BUZZER BOARD TEST START ***********\n");
@@ -391,7 +374,7 @@ int hexagon_pwmled_main(int argc, FAR char *argv[])
 	}
 	else
 	{
-		show_help_usage_hexagon(argv);
+		show_help_basic_hexagon(argv);
 	}
 
 	fd_red = pwm_open(pin_red);
@@ -564,7 +547,7 @@ int hexagon_dimming_main(int argc, FAR char *argv[])
 			break;
 		}
 	}
-	pwm_close(pin_red);
+	pwm_close(fd_red);
 
 	printf("************ HEXAGON LED DIMMING PROGRAM END ************\n");
 
@@ -618,4 +601,48 @@ int hexagon_autotemp_main(int argc, FAR char *argv[])
 
 	return 0;
 }
+
+int hexagon_servo_main(int argc, FAR char *argv[])
+{
+	int i;
+	int fd_servo;
+	int pin_servo = 0;
+	int max = 0;
+	char *pwm0 = "0";
+	char *pwm1 = "1";
+	int PERIOD=20000;
+
+	max = atoi(argv[3]);
+
+	if (strcmp(argv[2], pwm0)==0 ) { pin_servo = PWM0;}
+	else if (strcmp(argv[2], pwm1)==0 ) { pin_servo = PWM2; }
+	else {show_help_basic_hexagon(argv);}
+
+	fd_servo = pwm_open(pin_servo);
+
+	printf("*********** HEXAGON SERVO MOTOR TEST START ***********\n");
+
+	for(i=0 ; i<max ; i++)
+	{
+		printf("|---Servo Motor Angle :   0 degree\n");
+		ServoAngle(fd_servo, PERIOD, 0); up_mdelay(1000);
+
+		printf("|---Servo Motor Angle :  90 degree\n");
+		ServoAngle(fd_servo, PERIOD, 90); up_mdelay(1000);
+
+		printf("|---Servo Motor Angle : -90 degree\n");
+		ServoAngle(fd_servo, PERIOD, -90); up_mdelay(1000);
+
+	}
+
+	printf("************ HEXAGON SERVO MOTOR TEST END ************\n");
+	pwm_write(fd_servo, PERIOD, 0);
+	pwm_close(fd_servo);
+
+
+
+	return 0;
+}
+
+
 
