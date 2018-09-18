@@ -1,12 +1,13 @@
 /****************************************************************************
- *
- * Copyright 2018 baruncorechips All Rights Reserved.
- * Filename : A053BasicKit.c
- * Author : Seon-Je Yang
- * Created on: 2018. 8. 30.
- * Version : 1.0
- *
- ***************************************************************************/
+*
+* Copyright 2018 baruncorechips All Rights Reserved.
+*
+* Filename: A053BasicKit.c
+* Author: sj.yang
+* Release date: 2018/09/18
+* Version: 1.2
+*
+****************************************************************************/
 
 #include "A053BasicKit.h"
 
@@ -92,6 +93,15 @@ void pwm_close (int fd)
 	close(fd);
 }
 
+void ServoAngle(int fd, int PERIOD, int angle)
+{
+	int duty_cycle;
+	duty_cycle = 1500 + angle * 8.9;
+	if(duty_cycle >2300) {duty_cycle = 2300;}
+	else if(duty_cycle<700) {duty_cycle = 700;}
+	else {}
+	pwm_write(fd, PERIOD, duty_cycle);
+}
 /***************************************************************************
  *
  * ADC function
